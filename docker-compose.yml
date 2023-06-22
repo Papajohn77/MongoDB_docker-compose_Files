@@ -1,0 +1,33 @@
+﻿version: "3.8"
+
+services:
+  mongodb:
+    image: papajohn77/mongodb
+    container_name: mongodb
+    volumes:
+      - mongodb-data:/data/db
+    env_file:
+      - ./env/mongodb.env
+    restart: unless-stopped
+
+  minimal-api:
+    image: papajohn77/mongodb_api
+    env_file:
+      - ./env/minimal-api.env
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+
+  nginx:
+    image: papajohn77/nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    env_file:
+      - ./env/nginx.env
+    restart: unless-stopped
+    depends_on:
+      - minimal-api
+
+volumes:
+  mongodb-data:
